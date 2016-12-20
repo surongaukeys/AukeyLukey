@@ -1,0 +1,146 @@
+.body, html {
+    background-color: black;
+    overflow: auto;
+    height: 100%;
+}
+
+.wrapper {
+    background-color: black;
+    height: 800px;
+}
+
+.ulist {
+    float: right;
+}
+
+.index-tex {
+    float: right;
+    color: #f9b93b;
+}
+
+.left-menu-item {
+    height: 46px;
+    margin-bottom: 20px;
+    line-height: 25px;
+    color: #f9b93b;
+}
+
+.left-menu-item .open {
+    color: #000;
+}
+
+table thead {
+    background-color: #000;
+    color: #f9b93b;
+    font-size: 14px;
+    font-family: serif;
+    overflow-x: auto;
+}
+
+td {
+    border: 1px solid rgb(60, 42, 14) !important;
+    min-width: 40px;
+    min-height: 32px;
+}
+
+th {
+    border: 1px solid rgb(60, 42, 14) !important;
+    min-width: 40px;
+    max-height: 40px;
+}
+
+.fixed-table-container {
+    border: 1px solid rgb(60, 42, 14) !important;
+    height: 600px;
+    bottom: 0px;
+}
+
+#keyword {
+    padding-left: 10px;
+}
+
+.modal-sm {
+    margin: 130px 240px;
+    width: 222px;
+    height: 120px;
+}
+
+.modal-sm .modal-footer {
+    border: none;
+    padding: 27px 0;
+}
+
+.modal-footer.speci button {
+    width: 90px;
+}
+
+.fixed-table-body {
+    width: 100%;
+}
+
+.fun-btn {
+    padding-right: 0;
+}
+
+.modal-dialog {
+    z-index: 1050;
+}
+
+.table-hover > tbody > tr:hover {
+    background: transparent;
+}
+
+.main-container {
+    margin-right: 92px;
+    margin-left: 16px;
+}
+
+.top-nav {
+    z-index: 999;
+    background: black;
+    min-height: 80px;
+    position: fixed;
+    left: 0;
+    right: 70px;
+    top: 0;
+}
+
+.fixed-table-body::-webkit-scrollbar {
+    display: none;
+}
+/*
+默认状态
+ */
+table input[type='checkbox']{
+	width: 16px;
+    height: 18px;
+    display: inline-block;
+    zoom: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    outline: none;
+    cursor: pointer;
+    background: #3c2a0e;
+}
+/* 
+选中的时候
+ */
+table input[type='checkbox']:checked{
+	width: 16px;
+    height: 18px;
+    display: inline-block;
+    zoom: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    outline: none;
+    cursor: pointer;
+    background: #f9b93b;
+}
+/*
+获取焦点的时候
+ */
+input[type="checkbox"]:focus {
+  outline: thin dotted;
+  outline: none;
+  outline-offset: -2px;
+}

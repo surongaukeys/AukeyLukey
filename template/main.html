@@ -1,0 +1,368 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>抽奖主页</title>
+
+    <script type="text/javascript" src="../static/js/jquery-1.9.1.min.js"></script>
+    <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="../static/bootstrap-table/css/bootstrap-table.css">
+    <script src="../static/bootstrap/js/bootstrap-3.3.js"></script>
+    <script src="../static/bootstrap-table/js/bootstrap-table.min.js"></script>
+    <script src="../static/js/jquery.jqprint-0.3.js" type="text/javascript"></script>
+    <script src="../static/js/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="../this/global.css">
+    <!-- 导入下拉菜单美化插件 和样式表-->
+    <style type="text/css">
+        body {
+            background: url("../this/images/bg_main.png") no-repeat;
+            background-size: 100% 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -100;
+        }
+
+        .topMenu {
+            height: 60px;
+            width: 300px;
+            z-index: 10000;
+            position: relative;
+            float: right;
+        }
+
+        .topMenu ul {
+            margin: 10px;
+        }
+
+        .topMenu li {
+            list-style: none;
+            float: right;
+            width: 60px;
+            line-height: 60px;
+            height: 100%;
+        }
+
+        .wrapper {
+            width: 100%;
+            height: 100%;
+            /*margin: 0 auto;*/
+        }
+    </style>
+</head>
+<body style="height: 900px">
+<audio id="begin" src="../static/mp3/begin.mp3" hidden="hidden"></audio>
+<audio id="running" src="../static/mp3/runing.mp3" hidden="hidden" loop></audio>
+<audio id="stop" src="../static/mp3/stop.mp3" hidden="hidden" loop></audio>
+<div id="bg_black"></div>
+<div class="wrapper">
+
+    <!-- 导航菜单   -->
+    <div class="topMenu" id="topMenu">
+        <ul>
+            <a href="../index.html">
+                <li><img src="../this/images/icon_return.png"/></li>
+            </a>
+            <a id="bg-music" onclick="printPDF()" style="cursor: pointer;">
+                <li><img src="../this/images/icon_print.png"/></li>
+            </a>
+            <a href="../template/set.html?menuname=result">
+                <li><img src="../this/images/icon_setting.png"/></li>
+            </a>
+            <a href="../template/set.html?menuname=list">
+                <li><img src="../this/images/icon_list.png"/></li>
+            </a>
+        </ul>
+    </div>
+
+    <div id="content" class="">
+        <div id="options" class="songti">
+            <div id="option_size_div" class="btn-group">
+                <button id="option_size_btn" type="button" class="dropdown-toggle gold_input"
+                        data-toggle="dropdown">
+                    <span id="prize_name_sp">---</span>
+                    <span class="caret"></span>
+                </button>
+                <ul id="option_size_content" class="dropdown-menu gold_input" role="menu">
+                </ul>
+            </div>
+
+            <div id="times_div" class="">
+                <input id="times_input" class="gold_input" type="number" name="times" min="0" value="1">
+            </div>
+            <div class="small font-light"
+                 style="display:block;float:left;margin-left: 10px;color: gold;font-size: 18px;padding-top: 20px">
+                <span id="prize_left_span">剩余：--/--</span>
+            </div>
+        </div>
+
+        <div>
+            <div id="btn_div">
+                <button id="btn_start" class="btn_start" onclick="startBtnClick(event)">
+                    <!--onclick="startAnimate('startImg')"-->
+                </button>
+            </div>
+            <div id="show_code">
+                <div id="codes" style="position:relative;top: -73px;">
+                    <!-- 展示中奖数字  -->
+                    <p class="code_row">
+                        <span class="code_bit">0</span>
+                        <span class="code_bit">0</span>
+                        <span class="code_bit">0</span>
+                        <span class="code_bit">0</span>
+                    </p>
+                    <p class="code_row">
+                        <span class="code_bit">0</span>
+                        <span class="code_bit">0</span>
+                        <span class="code_bit">0</span>
+                        <span class="code_bit">0</span>
+                    </p>
+                    <p class="code_row">
+                        <span class="code_bit">0</span>
+                        <span class="code_bit">0</span>
+                        <span class="code_bit">0</span>
+                        <span class="code_bit">0</span>
+                    </p>
+                </div>
+                <div id="code_bg">
+                    <p id="bg_above_code_row" class="code_bg_row">
+                        <img class="img_above_code_bit float-left" src="../this/images/bg_above_code.png"/>
+                        <img class="img_above_code_bit float-left" src="../this/images/bg_above_code.png"/>
+                        <img class="img_above_code_bit float-left" src="../this/images/bg_above_code.png"/>
+                        <img class="img_above_code_bit float-left" src="../this/images/bg_above_code.png"/>
+                    </p>
+                    <p id="bg_under_code_row" class="code_bg_row ">
+                        <img class="img_under_code_bit float-left" style="margin-left: 0.5px"
+                             src="../this/images/bg_code.png"/>
+                        <img class="img_under_code_bit float-left" src="../this/images/bg_code.png"/>
+                        <img class="img_under_code_bit float-left" src="../this/images/bg_code.png"/>
+                        <img class="img_under_code_bit float-left" src="../this/images/bg_code.png"/>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- //中奖结果展示 -->
+<div id="showResultTable" class="showResultTable" style="display: block;" onclick="toggleRecordTables(true)">
+    <div id="title" onclick="toggleRecordTables()">
+        <h3 class="button" onclick="toggleRecordTables()">获奖信息
+            <small id="show_all" onclick="toggleShowAll(event)"> 显示全部</small>
+        </h3>
+    </div>
+    <div id="tables" class="in-center" style="display: none">
+        <div class="showResultContent" style="float: left; display: none;">
+            <table id="result_table" class="tableStyle table recordTable" data-toggle="table">
+                <thead>
+                <th data-field="index" data-visible="false"></th>
+                <th data-field="eCode">工号</th>
+                <th data-field="eName">姓名</th>
+                <th data-field="eDept" data-visible='false'>部门</th>
+                <th data-field="pName">奖项</th>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="showResultTable_bg" onclick="toggleRecordTables()">
+    <table id="result_table_bg" class="tableStyle table recordTable" data-toggle="table">
+        <thead>
+        <th data-field="index" data-visible="false"></th>
+        <th data-field="eCode">工号</th>
+        <th data-field="eName">姓名</th>
+        <th data-field="eDept" data-visible='false'>部门</th>
+        <th data-field="pName">奖项</th>
+        </thead>
+    </table>
+</div>
+
+
+<div class="modal songti" id="modal" style="display:none;">
+    <img id="sunshine" src="../this/images/bg_lucky_sunshine.png">
+    <div class="showResult" id="showResult">
+        <!--<div class="showResult" id="showResult">-->
+        <div class="top songti">
+            <span class="title" id="modal_title">
+            恭 喜 您 中 奖
+            </span>
+        </div>
+        <div id="modal_prize" class="h_line">
+            <div id="modal_hline_1" class="modal_prize_inner">
+                <img src="../this/images/h_line.png" class="h_line_left">
+                <span class="modal_prize_name">+</span>
+                <img src="../this/images/h_line.png" class="h_line_right">
+            </div>
+            <div id="modal_hline_2" class="modal_prize_inner">
+                <img src="../this/images/h_line.png" class="h_line_left">
+                <span class="modal_prize_name">+</span>
+                <img src="../this/images/h_line.png" class="h_line_right">
+            </div>
+        </div>
+        <div class="middle">
+            <span class="prizeSize songti" id="modal_eName">
+
+            </span>
+        </div>
+        <div id="modal_info" class="footer songti">
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="../this/new.js"></script>
+<script type="text/javascript" src="../this/main.js"></script>
+<script type="text/javascript" src="../this/showResult.js"></script>
+<script type="text/javascript">
+
+    $(function () {
+        loadTables(12);
+        document.body.style.height = $(window).height() + "px";
+        $(window).resize(function () {
+            document.body.style.height = $(window).height() + "px";
+        });
+
+        document.onkeyup = function (event) {
+            var code = event.keyCode;
+            if (String.fromCharCode(code) == " ") {
+                spaceKeyAction();
+            }
+        }
+    });
+
+    /**
+     * 空格事件 --> 控制抽奖
+     * @return {boolean}
+     */
+    function spaceKeyAction() {
+        // 隐藏榜单
+        // 隐藏抽奖弹出框
+        // 点击按钮
+
+        var display = $("#modal")[0].style.display;
+        if (display != "none") {
+            hideResultModal();
+            return false;
+        }
+
+        display = $('#showResultTable_bg')[0].style.display;
+        if (display == "none") {
+            toggleRecordTables();
+            return false;
+        }
+
+        if (startBtn.disabled == false)
+            $(startBtn).click();
+    }
+
+    /**
+     *
+     * @param pageSize
+     */
+    function loadTables(pageSize) {
+        var data = getLuckyRecords();
+
+        //如果当前显示的是 当前
+        if ($("#show_all")[0].innerText == "显示全部") {
+            if (data.length > 1) {
+                var count = 1;
+                var round = data[0].round;
+                while (data.length>count&&data[count].round == round)
+                    count++;
+                data = data.slice(0, count);
+            }
+        }
+
+        if (data.length == 0) {
+            $("#result_table_bg").hide();
+        } else {
+            $("#result_table_bg").show();
+            $("#result_table_bg").bootstrapTable("load", data.slice(0, 12));
+        }
+
+        var tableCount = Math.ceil(data.length / pageSize);
+        var template = '<div class="showResultContent" style="">' +
+            '<table id="idid" class="table tableStyle recordTable" data-toggle="table">' +
+            '<thead><th data-field="index" data-visible="false"></th><th data-field="eCode">工号</th><th data-field="eName">姓名</th><th data-field="pName">奖项</th></thead>' +
+            '</table></div>';
+        var width = parseInt($(".showResultContent").css("width")) + parseInt($(".showResultContent").css("margin-left")) + parseInt($(".showResultContent").css("margin-right"));
+        $("#tables").css("width", width * tableCount + "px");
+        for (var i = 0; i < tableCount; i++) {
+            var t = template.replace("idid", "result_table" + i);
+            $("#tables").append(t);
+        }
+        for (var j = 0; j < tableCount; j++) {
+            var tableId = "result_table" + j;
+            initTable(tableId);
+            $("#" + tableId).bootstrapTable("load", data.slice(pageSize * j, pageSize * (j + 1)));
+        }
+        formatTable(12);
+    }
+
+    function clearAllTables() {
+        var tableContainer = $("#tables")[0];
+        var tables = tableContainer.children;
+        for (var i = 1; i < tables.length; i++) {
+            tables[i].remove();
+            i--;
+        }
+    }
+
+    function refreshTables() {
+        clearAllTables();
+        loadTables(12);
+    }
+
+    function toggleRecordTables() {
+        var show;
+
+        show = $('#showResultTable').css('opacity') != 1;
+
+        if (show == true) {
+            $("tr").css("opacity", 1);
+            $("#bg_black").show();
+            $("#bg_black").css("opacity", "0.9");
+            $('#showResultTable').css('opacity', 1).css('z-index', 120);
+            $('#tables').show();
+            $('#showResultTable_bg').hide();
+            formatTablesOpacity(12);
+        } else {
+            $("#bg_black").hide();
+            $("#bg_black").css("opacity", "0.7");
+            $('#showResultTable').css('opacity', 0.3).css('z-index', 0);
+            $('#tables').hide();
+            $('#showResultTable_bg').show();
+            formatTablesOpacity(12);
+        }
+    }
+
+    function initTable(tableId) {
+        $('#' + tableId).bootstrapTable({
+            height: 594,
+            columns: [{
+                field: 'index',
+                title: ''
+            }, {
+                field: 'eCode',
+                title: '工号'
+            }, {
+                field: 'eName',
+                title: '姓名'
+            }, {
+                field: 'pName',
+                title: '奖项'
+            }]
+        });
+    }
+
+// 打印当前中奖信息
+function printPDF(){
+  $('#result_table_bg').bootstrapTable('showColumn', 'eDept');
+  toggleRecordTables();
+  $("#result_table_bg").jqprint();
+  $('#result_table_bg').bootstrapTable('hideColumn', 'eDept');
+  toggleRecordTables();
+}
+
+
+</script>
+</body>
+</html>
